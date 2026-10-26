@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#081120;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#14233a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a2e4c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff9933;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffb347;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#grad)" />
+  <circle cx="400" cy="220" r="70" fill="none" stroke="url(#accent)" stroke-width="3" stroke-dasharray="8 6" opacity="0.6"/>
+  <path d="M400 170 L425 240 L375 240 Z" fill="url(#accent)" opacity="0.8"/>
+  <circle cx="400" cy="210" r="14" fill="#ffffff" />
+  <text x="400" y="340" font-family="'Cinzel', serif, Georgia" font-size="34" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="4">UPVERSE</text>
+  <text x="400" y="380" font-family="'Inter', sans-serif, Arial" font-size="16" fill="#94a3b8" text-anchor="middle" letter-spacing="2">EXPERIENCE THE SOUL OF UTTAR PRADESH</text>
+</svg>
