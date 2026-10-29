@@ -195,7 +195,7 @@ body.light-mode .planning-step {
 
 .hero-top h2 {
     font-size: 2.2rem;
-    color: #fff;
+    color: var(--text, #fff);
     margin: 0;
 }
 
@@ -281,7 +281,7 @@ body.light-mode .planning-step {
 
 .card-header h3 {
     font-size: 1.5rem;
-    color: #fff;
+    color: var(--text, #fff);
     margin: 0;
 }
 
@@ -324,7 +324,7 @@ body.light-mode .planning-step {
 .stat-box p {
     font-size: 1.05rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text, #fff);
     margin: 0;
 }
 
@@ -348,7 +348,7 @@ body.light-mode .planning-step {
     justify-content: space-between;
     font-weight: 500;
     margin-bottom: 8px;
-    color: #fff;
+    color: var(--text, #fff);
 }
 
 .budget-bar {
@@ -383,7 +383,7 @@ body.light-mode .planning-step {
 
 .stay-subcard h4 {
     font-size: 1.2rem;
-    color: #fff;
+    color: var(--text, #fff);
     margin: 0 0 10px;
 }
 
@@ -486,7 +486,7 @@ body.light-mode .planning-step {
 }
 
 .food-pill strong, .gem-subcard strong {
-    color: #fff;
+    color: var(--text, #fff);
     font-size: 1.05rem;
     display: block;
     margin-bottom: 6px;
@@ -556,44 +556,114 @@ body.light-mode .card-header h3 {
     color: #0F172A;
 }
 
+[data-theme="light"] .card-header,
+body.light-mode .card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
 [data-theme="light"] .hero-overview-text,
 body.light-mode .hero-overview-text {
     color: #334155;
 }
 
+[data-theme="light"] .trip-actions-bar,
+body.light-mode .trip-actions-bar {
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+/* Journey Summary Stats */
 [data-theme="light"] .stat-box,
 body.light-mode .stat-box {
     background: #F8FAFC;
     border: 1px solid rgba(0, 0, 0, 0.07);
 }
 
+[data-theme="light"] .stat-box:hover,
+body.light-mode .stat-box:hover {
+    background: #FFFFFF;
+    border-color: rgba(255, 153, 51, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .stat-box p,
 [data-theme="light"] .stat-box strong,
+body.light-mode .stat-box p,
 body.light-mode .stat-box strong {
     color: #0F172A;
 }
 
-[data-theme="light"] .timeline-day-card,
-body.light-mode .timeline-day-card {
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] .timeline-day-card summary,
-body.light-mode .timeline-day-card summary {
+/* Budget Breakdown */
+[data-theme="light"] .budget-item,
+body.light-mode .budget-item {
     background: #F8FAFC;
-    color: #0F172A;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.07);
 }
 
-[data-theme="light"] .timeline-day-card summary span,
-body.light-mode .timeline-day-card summary span {
+[data-theme="light"] .budget-label,
+body.light-mode .budget-label {
     color: #0F172A;
+}
+
+[data-theme="light"] .budget-bar,
+body.light-mode .budget-bar {
+    background: #E2E8F0;
+}
+
+/* Recommended Stays */
+[data-theme="light"] .stay-subcard,
+body.light-mode .stay-subcard {
+    background: #F8FAFC;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .stay-subcard:hover,
+body.light-mode .stay-subcard:hover {
+    background: #FFFFFF;
+    border-color: rgba(255, 153, 51, 0.35);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .stay-subcard h4,
+body.light-mode .stay-subcard h4 {
+    color: #0F172A;
+}
+
+[data-theme="light"] .stay-subcard p,
+body.light-mode .stay-subcard p {
+    color: #334155;
+}
+
+[data-theme="light"] .stay-meta .price,
+body.light-mode .stay-meta .price {
+    background: rgba(59, 130, 246, 0.12);
+    color: #1D4ED8;
+}
+
+/* Day-by-Day Timeline */
+[data-theme="light"] .timeline-day,
+[data-theme="light"] .timeline-day-card,
+body.light-mode .timeline-day,
+body.light-mode .timeline-day-card {
+    background: #F8FAFC;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .timeline-day-header h4,
+body.light-mode .timeline-day-header h4 {
+    color: #0F172A;
+}
+
+[data-theme="light"] .timeline-slots,
+body.light-mode .timeline-slots {
+    border-left: 2px dashed rgba(255, 153, 51, 0.5);
 }
 
 [data-theme="light"] .slot-item,
 body.light-mode .slot-item {
-    background: #F8FAFC;
-    border: 1px solid rgba(0, 0, 0, 0.07);
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    padding: 12px 16px;
 }
 
 [data-theme="light"] .slot-item h4,
@@ -606,6 +676,7 @@ body.light-mode .slot-item p {
     color: #334155;
 }
 
+/* Table compatibility */
 [data-theme="light"] .budget-table th,
 body.light-mode .budget-table th {
     background: var(--primary);
@@ -623,12 +694,22 @@ body.light-mode .budget-table tr:hover {
     background: #F1F5F9;
 }
 
+/* Food Guide & Hidden Gems */
 [data-theme="light"] .food-pill,
 [data-theme="light"] .gem-subcard,
 body.light-mode .food-pill,
 body.light-mode .gem-subcard {
     background: #F8FAFC;
     border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .food-pill:hover,
+[data-theme="light"] .gem-subcard:hover,
+body.light-mode .food-pill:hover,
+body.light-mode .gem-subcard:hover {
+    background: #FFFFFF;
+    border-color: rgba(255, 153, 51, 0.35);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="light"] .food-pill strong,
@@ -645,6 +726,7 @@ body.light-mode .gem-subcard p {
     color: #334155;
 }
 
+/* Tips & Checklist */
 [data-theme="light"] .tips-list li,
 [data-theme="light"] .checklist li,
 body.light-mode .tips-list li,
@@ -654,11 +736,31 @@ body.light-mode .checklist li {
     border: 1px solid rgba(0, 0, 0, 0.07);
 }
 
+[data-theme="light"] .tips-list li span,
+[data-theme="light"] .checklist li span,
+body.light-mode .tips-list li span,
+body.light-mode .checklist li span {
+    color: #334155;
+}
+
+[data-theme="light"] .empty-card,
+body.light-mode .empty-card {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+    color: #64748B;
+}
+
 [data-theme="light"] .btn-restart,
 body.light-mode .btn-restart {
     background: #FFFFFF;
     color: #0F172A;
     border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .btn-restart:hover,
+body.light-mode .btn-restart:hover {
+    background: #F1F5F9;
+    border-color: rgba(0, 0, 0, 0.25);
 }
 
 [data-theme="light"] .ai-badge,
@@ -708,7 +810,8 @@ body.light-mode .badge-accent {
         padding: 14px;
     }
 
-    .stat-box strong {
+    .stat-box strong,
+    .stat-box p {
         font-size: 0.95rem;
     }
 

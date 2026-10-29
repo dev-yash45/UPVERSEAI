@@ -1797,4 +1797,63 @@ body.light-mode .suggestion-item {
     color: #0F172A;
 }
 
+[data-theme="light"] .clear-btn,
+body.light-mode .clear-btn {
+    background: #F1F5F9;
+    color: #475569;
+}
+
+[data-theme="light"] .clear-btn:hover,
+body.light-mode .clear-btn:hover {
+    background: #E2E8F0;
+    color: #0F172A;
+}
+
+[data-theme="light"] .card-footer a,
+body.light-mode .card-footer a {
+    color: #0F172A;
+}
+
+[data-theme="light"] .card-footer a:hover,
+body.light-mode .card-footer a:hover {
+    color: var(--primary);
+}
+
+[data-theme="light"] .featured-stats,
+body.light-mode .featured-stats {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+}
+
+[data-theme="light"] .featured-stats h4,
+body.light-mode .featured-stats h4 {
+    color: #475569;
+}
+
+[data-theme="light"] .skeleton-card,
+body.light-mode .skeleton-card {
+    background: linear-gradient(90deg, #E2E8F0, #F1F5F9, #E2E8F0);
+    background-size: 300%;
+}
+
+[data-theme="light"] footer,
+body.light-mode footer {
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .footer-bottom,
+body.light-mode .footer-bottom {
+    color: #64748B;
+}
+
+[data-theme="light"] .empty-state h2,
+body.light-mode .empty-state h2 {
+    color: #0F172A;
+}
+
+[data-theme="light"] .empty-state p,
+body.light-mode .empty-state p {
+    color: #475569;
+}
+
 

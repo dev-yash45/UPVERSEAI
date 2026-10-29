@@ -256,6 +256,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     box-shadow: 0 8px 20px rgba(255, 120, 0, 0.35);
 }
 
+#locationStatus {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+    display: block;
+}
+
 /* ==========================================================
    GENERATE BUTTON
 ========================================================== */
@@ -351,6 +358,11 @@ body.light-mode .form-group textarea::placeholder {
 body.light-mode .form-group option {
     background: #FFFFFF;
     color: #0F172A;
+}
+
+[data-theme="light"] #locationStatus,
+body.light-mode #locationStatus {
+    color: #64748B;
 }
 
 [data-theme="light"] input[type="date"]::-webkit-calendar-picker-indicator,

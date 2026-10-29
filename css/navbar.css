@@ -364,5 +364,7 @@ body.light-mode .mobile-nav-drawer {
 [data-theme="light"] .drawer-links a,
 body.light-mode .drawer-links a {
     color: #1E293B;
+    background: #F8FAFC;
+    border: 1px solid rgba(0, 0, 0, 0.06);
 }
 

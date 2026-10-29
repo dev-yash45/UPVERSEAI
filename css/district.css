@@ -2031,7 +2031,7 @@ footer{
 
 .info-card-title {
     font-size: 1.45rem;
-    color: #fff;
+    color: var(--text, #fff);
     margin: 0 0 10px;
 }
 
@@ -2152,6 +2152,7 @@ body.light-mode .district-left p {
 [data-theme="light"] .info-card,
 [data-theme="light"] .map-card,
 [data-theme="light"] .gallery-card,
+[data-theme="light"] .planner-card,
 body.light-mode .stat-card,
 body.light-mode .insight-card,
 body.light-mode .overview-card,
@@ -2160,7 +2161,8 @@ body.light-mode .meter-card,
 body.light-mode .mood-card,
 body.light-mode .info-card,
 body.light-mode .map-card,
-body.light-mode .gallery-card {
+body.light-mode .gallery-card,
+body.light-mode .planner-card {
     background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
@@ -2171,13 +2173,17 @@ body.light-mode .gallery-card {
 [data-theme="light"] .insight-card h3,
 [data-theme="light"] .highlight-card h3,
 [data-theme="light"] .info-card h3,
+[data-theme="light"] .info-card-title,
 [data-theme="light"] .overview-card h2,
+[data-theme="light"] .planner-card h2,
 body.light-mode .stat-card h2,
 body.light-mode .insight-card h2,
 body.light-mode .insight-card h3,
 body.light-mode .highlight-card h3,
 body.light-mode .info-card h3,
-body.light-mode .overview-card h2 {
+body.light-mode .info-card-title,
+body.light-mode .overview-card h2,
+body.light-mode .planner-card h2 {
     color: #0F172A;
 }
 
@@ -2185,13 +2191,106 @@ body.light-mode .overview-card h2 {
 [data-theme="light"] .insight-card p,
 [data-theme="light"] .highlight-card p,
 [data-theme="light"] .info-card p,
+[data-theme="light"] .info-card-desc,
 [data-theme="light"] .overview-card p,
+[data-theme="light"] .planner-card p,
 body.light-mode .stat-card span,
 body.light-mode .insight-card p,
 body.light-mode .highlight-card p,
 body.light-mode .info-card p,
-body.light-mode .overview-card p {
+body.light-mode .info-card-desc,
+body.light-mode .overview-card p,
+body.light-mode .planner-card p {
     color: #334155;
+}
+
+[data-theme="light"] .card-meta-tags span,
+body.light-mode .card-meta-tags span {
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    color: #475569;
+}
+
+[data-theme="light"] .info-card-footer,
+body.light-mode .info-card-footer {
+    border-top-color: rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .map-link-sm:hover,
+body.light-mode .map-link-sm:hover {
+    color: var(--primary);
+}
+
+[data-theme="light"] .progress,
+body.light-mode .progress {
+    background: #E2E8F0;
+}
+
+[data-theme="light"] .meter-label,
+body.light-mode .meter-label {
+    color: #0F172A;
+}
+
+[data-theme="light"] .mood-chip,
+body.light-mode .mood-chip {
+    background: #FFF7ED;
+    border-color: rgba(255, 153, 51, 0.35);
+    color: #D97706;
+}
+
+[data-theme="light"] .food-badge,
+body.light-mode .food-badge {
+    background: #FEF2F2;
+    color: #DC2626;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="light"] .festival-badge,
+body.light-mode .festival-badge {
+    background: #F5F3FF;
+    color: #7C3AED;
+    border-color: rgba(168, 85, 247, 0.3);
+}
+
+[data-theme="light"] .gem-badge,
+body.light-mode .gem-badge {
+    background: #ECFDF5;
+    color: #059669;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="light"] .info-badge,
+body.light-mode .info-badge {
+    background: rgba(255, 153, 51, 0.15);
+    color: #B45309;
+    border-color: rgba(255, 153, 51, 0.4);
+}
+
+.empty-card {
+    padding: 24px 20px;
+    text-align: center;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+[data-theme="light"] .empty-card,
+body.light-mode .empty-card {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+    color: #64748B;
+}
+
+[data-theme="light"] footer,
+body.light-mode footer {
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .footer-bottom,
+body.light-mode .footer-bottom {
+    color: #64748B;
 }
 
 [data-theme="light"] .ask-ai-card,
