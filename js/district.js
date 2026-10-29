@@ -9,12 +9,36 @@ let districtSlug = null;
 let districtData = null;
 
 /* ==========================================================
-   GET SLUG WITH SAFE FALLBACK
+   GET SLUG WITH SAFE FALLBACK & CANONICAL RESOLUTION
 ========================================================== */
 function getDistrictSlug() {
     const params = new URLSearchParams(window.location.search);
-    const slug = params.get("slug");
-    return slug ? slug.trim().toLowerCase() : "varanasi";
+    const paramVal = params.get("slug") || params.get("district") || params.get("name") || params.get("id");
+    if (!paramVal) return "varanasi";
+
+    const cleaned = paramVal.trim().toLowerCase();
+
+    // Numerical ID fallback
+    if (/^\d+$/.test(cleaned) && typeof districts !== "undefined") {
+        const foundById = districts.find(d => String(d.id) === cleaned);
+        if (foundById) return foundById.slug;
+    }
+
+    // Canonical slug resolution (handles aliases, historical names, spaces)
+    if (typeof window.resolveCanonicalDistrictSlug === "function") {
+        return window.resolveCanonicalDistrictSlug(cleaned);
+    }
+
+    if (typeof districts !== "undefined") {
+        const match = districts.find(d =>
+            d.slug === cleaned ||
+            d.name.toLowerCase() === cleaned ||
+            (d.aliases && d.aliases.some(a => a.toLowerCase() === cleaned || a.toLowerCase().replace(/\s+/g, "-") === cleaned))
+        );
+        if (match) return match.slug;
+    }
+
+    return cleaned;
 }
 
 function resolveDistrictImage(slug) {

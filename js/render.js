@@ -456,3 +456,6 @@ const Renderer = (() => {
         showError
     };
 })();
+
+window.Renderer = Renderer;
+

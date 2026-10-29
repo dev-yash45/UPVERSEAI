@@ -4,9 +4,9 @@
    CONFIG
 ========================================================== */
 
-const INITIAL_CARDS = 9;
+const INITIAL_CARDS = 12;
 
-let filteredDistricts = [...districts];
+let filteredDistricts = Array.isArray(districts) ? [...districts] : [];
 
 let visibleCards = INITIAL_CARDS;
 
@@ -15,57 +15,50 @@ let visibleCards = INITIAL_CARDS;
    DOM
 ========================================================== */
 
-const districtGrid =
-document.getElementById("districtGrid");
+const districtGrid = document.getElementById("districtGrid");
 
-const featuredTitle =
-document.getElementById("featuredTitle");
+const featuredTitle = document.getElementById("featuredTitle");
 
-const featuredDescription =
-document.getElementById("featuredDescription");
+const featuredDescription = document.getElementById("featuredDescription");
 
-const featuredCategory =
-document.getElementById("featuredCategory");
+const featuredCategory = document.getElementById("featuredCategory");
 
-const featuredPriority =
-document.getElementById("featuredPriority");
+const featuredPriority = document.getElementById("featuredPriority");
 
-const featuredImage =
-document.getElementById("featuredImage");
+const featuredImage = document.getElementById("featuredImage");
 
-const loadMoreBtn =
-document.getElementById("loadMoreBtn");
+const loadMoreBtn = document.getElementById("loadMoreBtn");
 
-const emptyState =
-document.getElementById("emptyState");
+const emptyState = document.getElementById("emptyState");
 
 
 /* ==========================================================
    FEATURED DISTRICT
 ========================================================== */
 
-function renderFeaturedDistrict(){
+function renderFeaturedDistrict() {
+    if (!Array.isArray(districts) || districts.length === 0) return;
 
-    const featured =
-    districts.find(d=>d.featured);
+    const featured = districts.find(d => d.featured) || districts[0];
 
-    if(!featured) return;
+    if (!featured) return;
 
-    featuredTitle.textContent =
-    featured.name;
+    if (featuredTitle) featuredTitle.textContent = featured.name;
 
-    featuredCategory.textContent =
-    featured.categories.join(", ");
+    if (featuredCategory) featuredCategory.textContent = (featured.categories || []).join(", ");
 
-    featuredPriority.textContent =
-    "Priority " + featured.priority;
+    if (featuredPriority) featuredPriority.textContent = "Priority " + (featured.priority || 10);
 
-    featuredImage.src =
-    featured.image;
+    if (featuredImage) {
+        featuredImage.src = featured.image || "assets/images/hero.webp";
+        featuredImage.onerror = function() {
+            this.src = "assets/images/hero.webp";
+        };
+    }
 
-    featuredDescription.textContent =
-    `Discover the culture, history, tourism and hidden gems of ${featured.name}.`;
-
+    if (featuredDescription) {
+        featuredDescription.textContent = `Discover the culture, history, tourism and hidden gems of ${featured.name}.`;
+    }
 }
 
 
@@ -73,30 +66,30 @@ function renderFeaturedDistrict(){
    CARD TEMPLATE
 ========================================================== */
 
-function createDistrictCard(district){
-return `
+function createDistrictCard(district) {
+    const cats = district.categories || ["culture"];
+    const img = district.image || `assets/images/districts/${district.slug}.webp`;
+    return `
 <div class="district-card" data-slug="${district.slug}" data-id="${district.id}">
-<div class="district-image">
-<img src="${district.image}" alt="${district.name}" loading="lazy" onerror="this.src='assets/images/hero.webp'">
-<button class="favorite-btn" aria-label="Add to favorites">
-<i class="fa-regular fa-heart"></i>
-</button>
-</div>
-<div class="district-content">
-<h3>${district.name}</h3>
-<div class="category-tags">
-${district.categories.map(cat=>`
-<span class="category-tag">${cat}</span>
-`).join("")}
-</div>
-<p>Explore AI-powered tourism, sacred sites, culinary secrets, and heritage.</p>
-<div class="card-footer">
-<a href="district.html?slug=${district.slug}" class="explore-card-link">
-Explore District
-<i class="fa-solid fa-arrow-right"></i>
-</a>
-</div>
-</div>
+    <div class="district-image">
+        <img src="${img}" alt="${district.name}" loading="lazy" onerror="this.src='assets/images/hero.webp'">
+        <button class="favorite-btn" aria-label="Add to favorites">
+            <i class="fa-regular fa-heart"></i>
+        </button>
+    </div>
+    <div class="district-content">
+        <h3>${district.name}</h3>
+        <div class="category-tags">
+            ${cats.map(cat => `<span class="category-tag">${cat}</span>`).join("")}
+        </div>
+        <p>Explore AI-powered tourism, sacred sites, culinary secrets, and heritage.</p>
+        <div class="card-footer">
+            <a href="district.html?slug=${district.slug}" class="explore-card-link">
+                Explore District
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
 </div>
 `;
 }
@@ -106,36 +99,19 @@ Explore District
    RENDER GRID
 ========================================================== */
 
-function renderDistricts(){
+function renderDistricts() {
+    if (!districtGrid) return;
+    districtGrid.innerHTML = "";
 
-districtGrid.innerHTML="";
+    const items = filteredDistricts.slice(0, visibleCards);
 
-const items=
+    items.forEach(d => {
+        districtGrid.insertAdjacentHTML("beforeend", createDistrictCard(d));
+    });
 
-filteredDistricts.slice(
-
-0,
-
-visibleCards
-
-);
-
-items.forEach(d=>{
-
-districtGrid.insertAdjacentHTML(
-
-"beforeend",
-
-createDistrictCard(d)
-
-);
-
-});
-
-toggleLoadMore();
-restoreFavorites();
-toggleEmptyState();
-
+    toggleLoadMore();
+    restoreFavorites();
+    toggleEmptyState();
 }
 
 
@@ -143,24 +119,13 @@ toggleEmptyState();
    LOAD MORE
 ========================================================== */
 
-function toggleLoadMore(){
-
-if(
-
-visibleCards>=filteredDistricts.length
-
-){
-
-loadMoreBtn.style.display="none";
-
-}
-
-else{
-
-loadMoreBtn.style.display="inline-flex";
-
-}
-
+function toggleLoadMore() {
+    if (!loadMoreBtn) return;
+    if (visibleCards >= filteredDistricts.length) {
+        loadMoreBtn.style.display = "none";
+    } else {
+        loadMoreBtn.style.display = "inline-flex";
+    }
 }
 
 
@@ -168,95 +133,120 @@ loadMoreBtn.style.display="inline-flex";
    EMPTY STATE
 ========================================================== */
 
-function toggleEmptyState(){
-
-if(filteredDistricts.length===0){
-
-emptyState.classList.remove("hidden");
-
-districtGrid.style.display="none";
-
+function toggleEmptyState() {
+    if (!emptyState || !districtGrid) return;
+    if (filteredDistricts.length === 0) {
+        emptyState.classList.remove("hidden");
+        districtGrid.style.display = "none";
+    } else {
+        emptyState.classList.add("hidden");
+        districtGrid.style.display = "grid";
+    }
 }
 
-else{
-
-emptyState.classList.add("hidden");
-
-districtGrid.style.display="grid";
-
-}
-
-}
 
 /* ==========================================================
    SEARCH DOM
 ========================================================== */
 
-const searchInput =
-document.getElementById("districtSearch");
+const searchInput = document.getElementById("districtSearch");
 
-const searchBtn =
-document.getElementById("searchBtn");
+const searchBtn = document.getElementById("searchBtn");
 
-const clearBtn =
-document.getElementById("clearSearch");
+const clearBtn = document.getElementById("clearSearch");
 
-const suggestionBox =
-document.getElementById("searchSuggestions");
+const suggestionBox = document.getElementById("searchSuggestions");
 
 
 /* ==========================================================
-   SEARCH
+   INTELLIGENT RANKED SEARCH
+   Matches Name, Slug, Aliases, Categories & Keywords with Scoring
 ========================================================== */
 
-function searchDistricts(query){
+function searchDistricts(query) {
+    if (!Array.isArray(districts)) return;
 
-query=query.trim().toLowerCase();
+    query = (query || "").replace(/^#/, "").trim().toLowerCase();
 
-if(query===""){
+    if (query === "") {
+        filteredDistricts = [...districts];
+        visibleCards = INITIAL_CARDS;
+        renderDistricts();
+        hideSuggestions();
+        if (clearBtn) clearBtn.style.display = "none";
+        return;
+    }
 
-filteredDistricts=[...districts];
+    if (clearBtn) clearBtn.style.display = "inline-flex";
 
-visibleCards=INITIAL_CARDS;
+    const tokens = query.split(/\s+/).filter(Boolean);
+    const scored = [];
 
-renderDistricts();
+    for (const d of districts) {
+        const name = d.name.toLowerCase();
+        const slug = d.slug.toLowerCase();
+        const aliases = (d.aliases || []).map(a => a.toLowerCase());
+        const keywords = (d.keywords || []).map(k => k.toLowerCase());
+        const categories = (d.categories || []).map(c => c.toLowerCase());
 
-hideSuggestions();
+        let score = 0;
 
-return;
+        // Exact match on name or slug
+        if (slug === query || name === query) {
+            score += 130;
+        } else if (name.startsWith(query) || slug.startsWith(query)) {
+            score += 90;
+        } else if (name.includes(query) || slug.includes(query)) {
+            score += 60;
+        }
 
-}
+        // Aliases match (e.g. Allahabad -> Prayagraj, Kashi -> Varanasi)
+        for (const a of aliases) {
+            if (a === query) score += 110;
+            else if (a.startsWith(query)) score += 80;
+            else if (a.includes(query)) score += 50;
+        }
 
-filteredDistricts=districts.filter(d=>{
+        // Keywords match (e.g. Taj Mahal, locks, perfume, dholak, dudhwa)
+        for (const k of keywords) {
+            if (k === query) score += 45;
+            else if (k.startsWith(query)) score += 35;
+            else if (k.includes(query)) score += 25;
+        }
 
-const name=d.name.toLowerCase();
+        // Categories match
+        for (const c of categories) {
+            if (c === query) score += 20;
+            else if (c.includes(query)) score += 10;
+        }
 
-const slug=d.slug.toLowerCase();
+        // Multi-word token matching across all combined fields
+        if (tokens.length > 1) {
+            let matchedTokenCount = 0;
+            const allText = `${name} ${slug} ${aliases.join(" ")} ${keywords.join(" ")} ${categories.join(" ")}`;
+            for (const t of tokens) {
+                if (allText.includes(t)) {
+                    matchedTokenCount++;
+                    score += 25;
+                }
+            }
+            if (matchedTokenCount === tokens.length) {
+                score += 50; // Bonus when all query words match
+            }
+        }
 
-const aliases=(d.aliases||[]).join(" ").toLowerCase();
+        if (score > 0) {
+            score += (d.priority || 5);
+            scored.push({ district: d, score });
+        }
+    }
 
-const keywords=(d.keywords||[]).join(" ").toLowerCase();
+    scored.sort((a, b) => b.score - a.score);
+    filteredDistricts = scored.map(s => s.district);
 
-return(
-
-name.includes(query)||
-
-slug.includes(query)||
-
-aliases.includes(query)||
-
-keywords.includes(query)
-
-);
-
-});
-
-visibleCards=INITIAL_CARDS;
-
-renderDistricts();
-
-showSuggestions(filteredDistricts);
-
+    visibleCards = INITIAL_CARDS;
+    renderDistricts();
+    showSuggestions(filteredDistricts);
 }
 
 
@@ -264,67 +254,39 @@ showSuggestions(filteredDistricts);
    SUGGESTIONS
 ========================================================== */
 
-function showSuggestions(results){
+function showSuggestions(results) {
+    if (!suggestionBox) return;
+    suggestionBox.innerHTML = "";
 
-suggestionBox.innerHTML="";
+    if (!results || results.length === 0) {
+        hideSuggestions();
+        return;
+    }
 
-if(results.length===0){
+    results.slice(0, 6).forEach(d => {
+        const cats = (d.categories || []).join(", ");
+        suggestionBox.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div class="suggestion-item" data-slug="${d.slug}">
+                <div>
+                    <strong>${d.name}</strong>
+                    <br>
+                    <span>${cats}</span>
+                </div>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </div>
+            `
+        );
+    });
 
-hideSuggestions();
-
-return;
-
+    suggestionBox.style.display = "block";
 }
 
-results.slice(0,6).forEach(d=>{
-
-suggestionBox.insertAdjacentHTML(
-
-"beforeend",
-
-`
-
-<div
-
-class="suggestion-item"
-
-data-slug="${d.slug}"
-
->
-
-<div>
-
-<strong>${d.name}</strong>
-
-<br>
-
-<span>
-
-${d.categories.join(", ")}
-
-</span>
-
-</div>
-
-<i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-</div>
-
-`
-
-);
-
-});
-
-suggestionBox.style.display="block";
-
-}
-
-
-function hideSuggestions(){
-
-suggestionBox.style.display="none";
-
+function hideSuggestions() {
+    if (suggestionBox) {
+        suggestionBox.style.display = "none";
+    }
 }
 
 
@@ -332,12 +294,9 @@ suggestionBox.style.display="none";
    OPEN DISTRICT
 ========================================================== */
 
-function openDistrict(slug){
-
-window.location.href=
-
-`district.html?slug=${slug}`;
-
+function openDistrict(slug) {
+    if (!slug) return;
+    window.location.href = `district.html?slug=${slug}`;
 }
 
 
@@ -345,52 +304,17 @@ window.location.href=
    BEST MATCH
 ========================================================== */
 
-function openBestMatch(){
+function openBestMatch() {
+    if (!searchInput) return;
+    const value = searchInput.value.replace(/^#/, "").trim().toLowerCase();
+    if (value === "") return;
 
-const value=
-
-searchInput.value
-
-.trim()
-
-.toLowerCase();
-
-if(value==="") return;
-
-const match=districts.find(d=>{
-
-return(
-
-d.name.toLowerCase().includes(value)||
-
-d.slug.toLowerCase().includes(value)||
-
-(d.aliases||[])
-
-.join(" ")
-
-.toLowerCase()
-
-.includes(value)||
-
-(d.keywords||[])
-
-.join(" ")
-
-.toLowerCase()
-
-.includes(value)
-
-);
-
-});
-
-if(match){
-
-openDistrict(match.slug);
-
-}
-
+    if (filteredDistricts.length > 0) {
+        openDistrict(filteredDistricts[0].slug);
+    } else if (typeof window.resolveCanonicalDistrictSlug === "function") {
+        const canonical = window.resolveCanonicalDistrictSlug(value);
+        openDistrict(canonical);
+    }
 }
 
 
@@ -398,139 +322,100 @@ openDistrict(match.slug);
    EVENTS
 ========================================================== */
 
-searchInput.addEventListener(
+if (searchInput) {
+    searchInput.addEventListener("input", e => {
+        searchDistricts(e.target.value);
+    });
 
-"input",
-
-e=>{
-
-searchDistricts(
-
-e.target.value
-
-);
-
+    searchInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            openBestMatch();
+        }
+    });
 }
 
-);
-
-
-searchBtn.addEventListener(
-
-"click",
-
-openBestMatch
-
-);
-
-
-searchInput.addEventListener(
-
-"keydown",
-
-e=>{
-
-if(e.key==="Enter"){
-
-openBestMatch();
-
+if (searchBtn) {
+    searchBtn.addEventListener("click", () => {
+        openBestMatch();
+    });
 }
 
+if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+        if (searchInput) {
+            searchInput.value = "";
+            searchInput.focus();
+        }
+        filteredDistricts = [...districts];
+        visibleCards = INITIAL_CARDS;
+        renderDistricts();
+        hideSuggestions();
+        clearBtn.style.display = "none";
+    });
+}
+
+const resetSearchBtn = document.getElementById("resetSearchBtn");
+if (resetSearchBtn) {
+    resetSearchBtn.addEventListener("click", () => {
+        if (clearBtn) {
+            clearBtn.click();
+        } else {
+            if (searchInput) searchInput.value = "";
+            filteredDistricts = [...districts];
+            visibleCards = INITIAL_CARDS;
+            renderDistricts();
+            hideSuggestions();
+        }
+    });
+}
+
+// Close suggestion box on outside click
+document.addEventListener("click", e => {
+    if (suggestionBox && !suggestionBox.contains(e.target) && e.target !== searchInput) {
+        hideSuggestions();
+    }
 });
-
-
-clearBtn.addEventListener(
-
-"click",
-
-()=>{
-
-searchInput.value="";
-
-filteredDistricts=[...districts];
-
-visibleCards=INITIAL_CARDS;
-
-renderDistricts();
-
-hideSuggestions();
-
-searchInput.focus();
-
-});
-
 
 
 /* ==========================================================
    SUGGESTION CLICK
 ========================================================== */
 
-suggestionBox.addEventListener(
+if (suggestionBox) {
+    suggestionBox.addEventListener("click", e => {
+        const item = e.target.closest(".suggestion-item");
+        if (!item) return;
+        openDistrict(item.dataset.slug);
+    });
+}
 
-"click",
-
-e=>{
-
-const item=
-
-e.target.closest(
-
-".suggestion-item"
-
-);
-
-if(!item) return;
-
-openDistrict(
-
-item.dataset.slug
-
-);
-
-});
 
 /* ==========================================================
    FILTERS
 ========================================================== */
 
-const filterButtons =
-document.querySelectorAll(".filter-btn");
+const filterButtons = document.querySelectorAll(".filter-btn");
 
-filterButtons.forEach(button=>{
-
-    button.addEventListener("click",()=>{
-
-        filterButtons.forEach(btn=>
-            btn.classList.remove("active")
-        );
-
+filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        filterButtons.forEach(btn => btn.classList.remove("active"));
         button.classList.add("active");
 
-        const filter =
-        button.dataset.filter;
+        const filter = button.dataset.filter;
 
-        if(filter==="all"){
-
-            filteredDistricts=[...districts];
-
-        }
-
-        else{
-
-            filteredDistricts=districts.filter(d=>
-                d.categories.includes(filter)
+        if (filter === "all") {
+            filteredDistricts = [...districts];
+        } else {
+            filteredDistricts = districts.filter(d =>
+                (d.categories || []).includes(filter)
             );
-
         }
 
-        visibleCards=INITIAL_CARDS;
-
+        visibleCards = INITIAL_CARDS;
         renderDistricts();
-
         hideSuggestions();
-
     });
-
 });
 
 
@@ -538,23 +423,15 @@ filterButtons.forEach(button=>{
    TRENDING SEARCH
 ========================================================== */
 
-document
-.querySelectorAll(".trend-chip")
-.forEach(chip=>{
-
-    chip.addEventListener("click",()=>{
-
-        searchInput.value=
-        chip.textContent.trim();
-
-        searchDistricts(
-            chip.textContent.trim()
-        );
-
+document.querySelectorAll(".trend-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+        const query = chip.textContent.trim();
+        if (searchInput) {
+            searchInput.value = query;
+        }
+        searchDistricts(query);
         openBestMatch();
-
     });
-
 });
 
 
@@ -562,60 +439,40 @@ document
    LOAD MORE
 ========================================================== */
 
-loadMoreBtn.addEventListener("click",()=>{
-
-    visibleCards+=INITIAL_CARDS;
-
-    renderDistricts();
-
-});
+if (loadMoreBtn) {
+    loadMoreBtn.addEventListener("click", () => {
+        visibleCards += INITIAL_CARDS;
+        renderDistricts();
+    });
+}
 
 
 /* ==========================================================
    CARD CLICK
 ========================================================== */
 
-districtGrid.addEventListener("click",e=>{
-
-    const card =
-    e.target.closest(".district-card");
-
-    if(!card) return;
-
-    if(e.target.closest(".favorite-btn")) return;
-
-    openDistrict(card.dataset.slug);
-
-});
+if (districtGrid) {
+    districtGrid.addEventListener("click", e => {
+        const card = e.target.closest(".district-card");
+        if (!card) return;
+        if (e.target.closest(".favorite-btn")) return;
+        openDistrict(card.dataset.slug);
+    });
+}
 
 
 /* ==========================================================
    RANDOM DISTRICT
 ========================================================== */
 
-const randomBtn =
-document.getElementById("randomDistrictBtn");
+const randomBtn = document.getElementById("randomDistrictBtn");
 
-if(randomBtn){
-
-    randomBtn.addEventListener("click",()=>{
-
-        const random =
-
-        districts[
-
-            Math.floor(
-
-                Math.random()*districts.length
-
-            )
-
-        ];
-
+if (randomBtn) {
+    randomBtn.addEventListener("click", () => {
+        if (!Array.isArray(districts) || districts.length === 0) return;
+        const random = districts[Math.floor(Math.random() * districts.length)];
         openDistrict(random.slug);
-
     });
-
 }
 
 
@@ -623,171 +480,114 @@ if(randomBtn){
    SCROLL TO TOP
 ========================================================== */
 
-const scrollTopBtn =
-document.getElementById("scrollTopBtn");
+const scrollTopBtn = document.getElementById("scrollTopBtn");
 
-window.addEventListener("scroll",()=>{
-
-    if(window.scrollY>500){
-
-        scrollTopBtn.classList.add("show");
-
-    }
-
-    else{
-
-        scrollTopBtn.classList.remove("show");
-
-    }
-
-});
-
-scrollTopBtn.addEventListener("click",()=>{
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
+if (scrollTopBtn) {
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 500) {
+            scrollTopBtn.classList.add("show");
+        } else {
+            scrollTopBtn.classList.remove("show");
+        }
     });
 
-});
+    scrollTopBtn.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
+}
 
 
 /* ==========================================================
    FAVORITES
 ========================================================== */
 
-function getFavorites(){
-
-    return JSON.parse(
-
-        localStorage.getItem("favorites")
-
-        || "[]"
-
-    );
-
+function getFavorites() {
+    try {
+        return JSON.parse(localStorage.getItem("favorites") || "[]");
+    } catch {
+        return [];
+    }
 }
 
-function saveFavorites(data){
-
-    localStorage.setItem(
-
-        "favorites",
-
-        JSON.stringify(data)
-
-    );
-
+function saveFavorites(data) {
+    try {
+        localStorage.setItem("favorites", JSON.stringify(data));
+    } catch (e) {
+        console.warn("Could not save favorites:", e);
+    }
 }
 
-districtGrid.addEventListener("click",e=>{
+if (districtGrid) {
+    districtGrid.addEventListener("click", e => {
+        const favBtn = e.target.closest(".favorite-btn");
+        if (!favBtn) return;
+        e.stopPropagation();
 
-    const favBtn =
-    e.target.closest(".favorite-btn");
+        const card = favBtn.closest(".district-card");
+        if (!card) return;
+        const slug = card.dataset.slug;
 
-    if(!favBtn) return;
+        let favorites = getFavorites();
 
-    e.stopPropagation();
+        if (favorites.includes(slug)) {
+            favorites = favorites.filter(item => item !== slug);
+            favBtn.classList.remove("active");
+            favBtn.innerHTML = `<i class="fa-regular fa-heart"></i>`;
+        } else {
+            favorites.push(slug);
+            favBtn.classList.add("active");
+            favBtn.innerHTML = `<i class="fa-solid fa-heart"></i>`;
+        }
 
-    const card =
-    favBtn.closest(".district-card");
-
-    const slug =
-    card.dataset.slug;
-
-    let favorites =
-    getFavorites();
-
-    if(favorites.includes(slug)){
-
-        favorites =
-        favorites.filter(
-
-            item=>item!==slug
-
-        );
-
-        favBtn.classList.remove("active");
-
-        favBtn.innerHTML=
-        `<i class="fa-regular fa-heart"></i>`;
-
-    }
-
-    else{
-
-        favorites.push(slug);
-
-        favBtn.classList.add("active");
-
-        favBtn.innerHTML=
-        `<i class="fa-solid fa-heart"></i>`;
-
-    }
-
-    saveFavorites(favorites);
-
-});
+        saveFavorites(favorites);
+    });
+}
 
 
 /* ==========================================================
    RESTORE FAVORITES
 ========================================================== */
 
-function restoreFavorites(){
+function restoreFavorites() {
+    const favorites = getFavorites();
 
-    const favorites =
-    getFavorites();
+    document.querySelectorAll(".district-card").forEach(card => {
+        const slug = card.dataset.slug;
+        const btn = card.querySelector(".favorite-btn");
+        if (!btn) return;
 
-    document
-
-    .querySelectorAll(".district-card")
-
-    .forEach(card=>{
-
-        const slug =
-        card.dataset.slug;
-
-        const btn =
-        card.querySelector(".favorite-btn");
-
-        if(favorites.includes(slug)){
-
+        if (favorites.includes(slug)) {
             btn.classList.add("active");
-
-            btn.innerHTML=
-            `<i class="fa-solid fa-heart"></i>`;
-
+            btn.innerHTML = `<i class="fa-solid fa-heart"></i>`;
+        } else {
+            btn.classList.remove("active");
+            btn.innerHTML = `<i class="fa-regular fa-heart"></i>`;
         }
-
     });
-
 }
+
 
 /* ==========================================================
    PAGE LOADER
 ========================================================== */
 
-window.addEventListener("load",()=>{
-
-    const loader =
-    document.getElementById("loader");
+window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
 
     renderFeaturedDistrict();
-
     renderDistricts();
 
-    setTimeout(()=>{
-
-        loader.classList.add("hidden");
-
+    if (loader) {
+        setTimeout(() => {
+            loader.classList.add("hidden");
+            initializeAnimations();
+        }, 600);
+    } else {
         initializeAnimations();
-
-    },800);
-
+    }
 });
 
 
@@ -795,70 +595,43 @@ window.addEventListener("load",()=>{
    GSAP READY
 ========================================================== */
 
-function initializeAnimations(){
+function initializeAnimations() {
+    if (typeof gsap === "undefined") return;
 
-    if(typeof gsap==="undefined") return;
-
-    gsap.from(".hero-tag",{
-
-        y:30,
-
-        opacity:0,
-
-        duration:.8
-
+    gsap.from(".hero-tag", {
+        y: 30,
+        opacity: 0,
+        duration: 0.8
     });
 
-    gsap.from(".hero-container h1",{
-
-        y:40,
-
-        opacity:0,
-
-        duration:1,
-
-        delay:.2
-
+    gsap.from(".hero-container h1", {
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        delay: 0.2
     });
 
-    gsap.from(".hero-container p",{
-
-        y:30,
-
-        opacity:0,
-
-        duration:.8,
-
-        delay:.4
-
+    gsap.from(".hero-container p", {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.4
     });
 
-    gsap.from(".search-wrapper",{
-
-        y:40,
-
-        opacity:0,
-
-        duration:.8,
-
-        delay:.5
-
+    gsap.from(".search-wrapper", {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.5
     });
 
-    gsap.from(".filter-btn",{
-
-        y:20,
-
-        opacity:0,
-
-        duration:.5,
-
-        stagger:.08,
-
-        delay:.6
-
+    gsap.from(".filter-btn", {
+        y: 20,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.08,
+        delay: 0.6
     });
-
 }
 
 
@@ -866,21 +639,12 @@ function initializeAnimations(){
    FUTURE AI BUTTON
 ========================================================== */
 
-const aiButton =
-document.getElementById("recommendDistrict");
+const aiButton = document.getElementById("recommendDistrict");
 
-if(aiButton){
-
-    aiButton.addEventListener("click",()=>{
-
-        alert(
-
-            "🚀 AI Recommendation will be connected with Dify Workflow."
-
-        );
-
+if (aiButton) {
+    aiButton.addEventListener("click", () => {
+        alert("🚀 AI Recommendation will be connected with Dify Workflow.");
     });
-
 }
 
 
@@ -888,20 +652,12 @@ if(aiButton){
    PERFORMANCE
 ========================================================== */
 
-document.addEventListener("visibilitychange",()=>{
-
-    if(document.hidden){
-
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
         console.log("Explore Page Paused");
-
-    }
-
-    else{
-
+    } else {
         console.log("Explore Page Active");
-
     }
-
 });
 
 /* ==========================================================
@@ -909,6 +665,6 @@ document.addEventListener("visibilitychange",()=>{
 ========================================================== */
 
 console.log(
-"%c🚀 UPVERSE Explore Ready",
-"color:#ff9933;font-size:16px;font-weight:bold;"
+    "%c🚀 UPVERSE Explore Ready",
+    "color:#ff9933;font-size:16px;font-weight:bold;"
 );
